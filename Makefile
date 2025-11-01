@@ -10,4 +10,4 @@ main: main.o
 	g++ main.o ${FLAGS} -o lists
 
 clean:
-	rm -rf *.o *.exe *.dmp *.log *.log.dmp *.exe.log.dmp
+	rm -rf *.o *.exe *.dmp *.log *.log.dmp *.exe.log.dmp *.png
