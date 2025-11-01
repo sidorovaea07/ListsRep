@@ -1,0 +1,15 @@
+digraph {
+	 0 [shape = Mrecord; style = filled; fillcolor = pink2; color = blue; label = "{ind = 0 | next = 0 | value = 789706 | prev = 0}"]
+	0->0 [dir = none; color = sienna4]
+	 1 [shape = Mrecord; style = filled; fillcolor = pink2; color = blue; label = "{ind = 1 | next = 0 | value = 233495534 | prev = 0}"]
+	1->0 [dir = none; color = sienna4]
+	 2 [shape = Mrecord; style = filled; fillcolor = pink2; color = blue; label = "{ind = 2 | next = 2 | value = 233495534 | prev = 0}"]
+	0->2 [color = red]
+	2->2 [color = green]
+	 3 [shape = Mrecord; style = filled; fillcolor = pink2; color = blue; label = "{ind = 3 | next = 3 | value = 233495534 | prev = 0}"]
+	0->3 [color = red]
+	3->3 [color = green]
+	 4 [shape = Mrecord; style = filled; fillcolor = pink2; color = blue; label = "{ind = 4 | next = 4 | value = 233495534 | prev = 0}"]
+	0->4 [color = red]
+	4->4 [color = green]
+}
