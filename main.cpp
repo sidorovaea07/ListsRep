@@ -3,7 +3,7 @@
 #define tail lst -> data[0].prev
 #define head lst -> data[0].next
 #define ifree lst -> free
-#define SIZEOFMYLIST 10
+#define SIZEOFMYLIST 1
 
 int main()
 {  
@@ -19,15 +19,17 @@ int main()
 int ListInit(list_t *lst, size_t capacity)
 {
     lst -> data = (elem_t* ) calloc(capacity + 1, sizeof (elem_t));
-    lst -> capacity = capacity;
-    tail = 0;
-    head = ifree = 1;
+    lst -> capacity = capacity + 1;
+    lst -> size = 0;
+    tail = head = 0;
     lst -> data[0].value = CANARY1;
-    for (size_t i = 1; i < capacity; i++) {
-        lst -> data[i].prev = - 1;
+    ifree = 1;
+    for (size_t i = 1; i < lst -> capacity; i++) {
+        lst -> data[i].prev = -1;
         lst -> data[i].value = POISON;
         lst -> data[i].next = (int)i + 1;
     }
+    lst -> data[lst -> capacity - 1].next = 0;
     return OK;
 }
 
@@ -35,9 +37,9 @@ int TxtGenerate(list_t *lst, const char* inputfile)
 {
     FILE* fp = fopen(inputfile, "w");
     fprintf(fp, "digraph {\n");
-    fprintf(fp, "Free [shape = rect; color = blue; label = \"free = %d\"]\n", lst -> free);
+    fprintf(fp, "inf [shape = rect; color = blue; label = \"head = %d\ntail = %d\nfree = %d\nsize = %lu\ncapacity = %lu\"]\n", head, tail, lst -> free, lst -> size, lst -> capacity);
     for (size_t i = 0; i < lst -> capacity; i++) {
-        if (lst -> data[i].value == POISON) CREATE_FREEBLOCK
+        if (lst -> data[i].value == POISON) {CREATE_FREEBLOCK; CREATE_ARROW}
         else {CREATE_BLOCK; CREATE_ARROW}
     }
     fprintf(fp, "}\n");
@@ -54,7 +56,7 @@ int PngGenerate(const char* inputfile)
     scanf("%9s", outputfile);
     sprintf(str, "dot %s -T png -o pictures/%s.png", inputfile, outputfile);
     PRINT("%s\n", str);
-    PRD(system(str));
+    system(str);
     return OK;
 }
 
@@ -65,18 +67,52 @@ int ListDump(list_t *lst, const char* inputfile)
     return OK;
 }
 
-int ListInsert(list_t *lst, int in)
+int ListInsert(list_t *lst, int ind, int in)
 {
-    int i = 0;
-    for (i = 1; lst -> data[i].next != 0; i = lst -> data[i].next) {}
-    int insert_to = lst -> data[i].next = ifree;
-    lst -> data[insert_to].prev = tail;
-    tail = ifree;
-    ifree = lst -> data[insert_to].next;
-    lst -> data[insert_to].value = in;
-    lst -> data[insert_to].next = 0;
+    lst -> size++;
+    int currnext = lst -> data[ind].next;
+    int currnextfree = lst -> data[ifree].next;
+    
+    int into = ifree;
+
+    if (ind == 0) {head = into;}
+    if (ind == tail) {tail = into;}
+    
+    lst -> data[ind].next = into;
+    lst -> data[currnext].prev = into;
+    
+    lst -> data[into].prev = (int)ind;
+    lst -> data[into].value = in;
+    lst -> data[into].next = currnext;
+
+    PRD(ifree);
+    PRD(currnextfree); 
+    if (currnextfree == 0) {ifree = ListRealloc(lst);}
+    else {ifree = currnextfree;}
+
     PRINT("inserted\n");
-    return insert_to;
+    return into;
+}
+
+int ListRealloc(list_t *lst)
+{
+    size_t currcapacity = lst -> capacity;
+    PRD(lst -> data[lst -> capacity - 1].value);
+    PRU(lst -> capacity);
+    PRU(lst -> size);
+    
+    (lst -> capacity) *= 2;
+    PRU(lst -> capacity);
+    lst -> data = (elem_t* ) realloc(lst -> data, (lst -> capacity) * sizeof(elem_t));
+    if (!lst -> data) {PRINT("WRONG REALLOC\n");}
+    for (size_t i = currcapacity; i < lst -> capacity; i++) {
+        lst -> data[i].prev = - 1;
+        lst -> data[i].value = POISON;
+        lst -> data[i].next = (int)i + 1;
+    }
+    lst -> data[lst -> capacity - 1].next = 0;
+
+    return (int)currcapacity;
 }
 
 int ListDelete(list_t *lst, int index)
@@ -87,18 +123,20 @@ int ListDelete(list_t *lst, int index)
     lst -> data[index].prev = -1;
     lst -> data[index].next = ifree;
     ifree = ifree < index ? ifree : index;                              // ??  
+    lst -> size--;
     PRINT("deleted\n");
     return OK;
 }
 
 int ListProcess(list_t *lst)
 {
-    int x = 0;
-    char w = '\0';
-    printf(YELLOW "Type \"i\" and number to insert it or \"d\" and index to delete it.\n" WHITE);
-    while (scanf("%c%d", &w, &x) == 2) {        
-        if (w == 'i') {ListInsert(lst, x);}
-        else if (w == 'd') {ListDelete(lst, x);}
+    int v = 0;  //value
+    char w = '\0';  //wish
+    int d = 0;  //dest
+    printf(YELLOW "Type \"i\", index and number to insert it or \"d\" and index to delete it.\n" WHITE);
+    while (scanf("%c%d%d", &w, &d, &v) == 3) {        
+        if (w == 'i') {ListInsert(lst, d, v);}
+        else if (w == 'd') {ListDelete(lst, d);}
         else if (w == 'q') {break;}
         else printf("Try again.\n");
         CleanBuff();
@@ -117,5 +155,3 @@ int CleanBuff()
     while (getchar() != '\n');
     return OK;
 }
-// int ListReallocation(list_t *lst);
-// int ListVerify(list_t *lst);

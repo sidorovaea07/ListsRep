@@ -24,10 +24,11 @@
         i, i, lst -> data[i].prev, lst -> data[i].value, lst -> data[i].next);
 
 #define CREATE_ARROW                                                                                        \
-        if (i == (size_t)lst -> data[lst -> data[i].next].prev)                                   \
+        if (lst -> data[i]. prev == -1) fprintf(fp, "\t%lu->%d [color = yellow]\n", i, lst -> data[i].next); \
+        else if (i == (size_t)lst -> data[lst -> data[i].next].prev)                                         \
             fprintf(fp, "\t%lu->%d [dir = none; color = sienna4]\n", i, lst -> data[i].next);               \
         else {                                                                                              \
-            fprintf(fp, "\t%d->%lu [color = red]\n", lst -> data[i].prev, i);                              \
+            fprintf(fp, "\t%lu->%d [color = red]\n", i, lst -> data[i].prev);                              \
             fprintf(fp, "\t%lu->%d [color = green]\n", i, lst -> data[i].next);                            \
         }
 #define STRSIZE 100
@@ -44,7 +45,8 @@
     #define PRP(x)
     #define PRD(x)
     #define PRU(x)
-    #define PRTF(x)                                
+    #define PRTF(x)
+    #define PRINT(fmt, ...)                                
 #endif
 
 typedef const int canary;
@@ -78,10 +80,10 @@ int TxtGenerate(list_t *lst, const char* inputfile);
 int PngGenerate(const char* inputfile);
 int ListDump(list_t *lst, const char* inputfile);
 
-int ListInsert(list_t *lst, int in);
+int ListInsert(list_t *lst, int ind, int in);
 int ListDelete(list_t *lst, int index);
 
-int ListReallocation(list_t *lst);
+int ListRealloc(list_t *lst);
 int ListDestroy(list_t *lst);
 
 #endif
