@@ -55,10 +55,11 @@ int HtmlGenerate(const char* pngfile, const char* output, list_t *lst)
     return OK;
 }
 
-int ListDump(list_t *lst, const char* inputfile)
+int ListDump(list_t *lst, const char* inputfile, const char* htmlfile)
 {
     TxtGenerate(lst, inputfile);
     OutputName();
     PngGenerate(inputfile, out);
+    HtmlGenerate(out, htmlfile, lst);
     return OK;
 }

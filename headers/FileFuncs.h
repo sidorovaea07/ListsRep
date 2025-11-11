@@ -22,7 +22,8 @@
 
 int TxtGenerate(list_t *lst, const char* inputfile);
 int PngGenerate(const char* inputfile, const char* outputfile);
-int HtmlGenerate(const char *pngfile, const char* output, list_t *lst);
+int ListDump(list_t *lst, const char* inputfile, const char* htmlfile);
+int HtmlGenerate(const char* pngfile, const char* output, list_t *lst);
 int OutputName();
 
 #endif

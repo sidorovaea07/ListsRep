@@ -9,7 +9,6 @@ int ListProcess(list_t *lst);
 int ListInsert(list_t *lst, int ind, int in);
 int ListDelete(list_t *lst, int index);
 int ListRealloc(list_t *lst);
-int ListDump(list_t *lst, const char* inputfile);
 int ListDestroy(list_t *lst);
 
 #endif
