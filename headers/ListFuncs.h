@@ -1,5 +1,6 @@
-#ifndef LISTFUNCS
-#define LISTFUNCS
+#ifndef HEADERS_LISTFUNCS_H
+#define HEADERS_LISTFUNCS_H
+#include <stdlib.h>
 
 #include "Lists.h"
 
@@ -10,5 +11,6 @@ int ListInsert(list_t *lst, int ind, int in);
 int ListDelete(list_t *lst, int index);
 int ListRealloc(list_t *lst);
 int ListDestroy(list_t *lst);
+int CleanBuff();
 
 #endif
