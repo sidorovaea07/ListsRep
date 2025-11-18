@@ -11,6 +11,5 @@ int ListInsert(list_t *lst, int ind, int in);
 int ListDelete(list_t *lst, int index);
 int ListRealloc(list_t *lst);
 int ListDestroy(list_t *lst);
-int CleanBuff();
 
 #endif

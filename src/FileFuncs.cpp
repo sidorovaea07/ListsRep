@@ -1,5 +1,5 @@
-#include "../headers/FileFuncs.h"
-
+#include "FileFuncs.h"
+                             
 int CleanBuff()
 {
     while (getchar() != '\n');

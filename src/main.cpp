@@ -1,8 +1,9 @@
-#include "../headers/ListFuncs.h"
-#include "../headers/FileFuncs.h"
+#include "ListFuncs.h"
+#include "FileFuncs.h"
 
 int main()
 {  
+    PRINT("HELLOWORLD\n");
     list_t lst1;
     files_t files1 = {"graph.txt", "", "my.html"};
     ListInit(&lst1, 0);

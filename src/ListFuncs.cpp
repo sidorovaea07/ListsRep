@@ -1,4 +1,5 @@
-#include "../headers/ListFuncs.h"
+#include "ListFuncs.h"
+#include "FileFuncs.h"
 
 int ListInit(list_t *lst, size_t capacity)
 {
@@ -6,7 +7,7 @@ int ListInit(list_t *lst, size_t capacity)
     lst->capacity = capacity + 1;
     lst->size = 0;
     tail = head = 0;
-    lst->data[0].value = CANARY1;
+    lst->data[0].value = POISON;
     ifree = 1;
     
     if (lst->capacity - 1 > 1) {
@@ -24,13 +25,13 @@ int ListInsert(list_t *lst, int ind, int in)
 {
     if (ind >= (int)lst->capacity || ind < 0 || lst->data[ind].prev == -1) {printf("You can't insert after this index!\n"); return OK;}
     lst->size++;
-    if (ifree == lst->capacity) {
+    if (ifree == (int)lst->capacity) {
         ListRealloc(lst);
     }
     int currnext = lst->data[ind].next;
     int currnextfree = lst->data[ifree].next;
     int into = ifree;
-    PRD(ifree); PRD(lst->capacity);
+    PRD(ifree); PRU(lst->capacity);
     
     if (ind == 0) {
         head = into;
