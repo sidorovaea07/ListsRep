@@ -1,5 +1,6 @@
 #include "ListFuncs.h"
-#include "FileFuncs.h"
+#include "Dump.h"
+#include <stdlib.h>
 
 int ListInit(list_t *lst, size_t capacity)
 {
@@ -7,7 +8,7 @@ int ListInit(list_t *lst, size_t capacity)
     lst->capacity = capacity + 1;
     lst->size = 0;
     tail = head = 0;
-    lst->data[0].value = POISON;
+    lst->data[0].value = CANARY1;
     ifree = 1;
     
     if (lst->capacity - 1 > 1) {
@@ -96,31 +97,37 @@ int ListDelete(list_t *lst, int index)
     lst->data[index].prev = -1;
     lst->data[index].next = ifree;
 
-    ifree = ifree < index ? ifree : index;                              // ??  
+    ifree = index;
     lst->size--;
     
     PRINT("deleted\n");
     return OK;
 }
 
-int ListProcess(list_t *lst)
+int ListProcess(list_t *lst, files_t* files)
 {
     int v = 0; char w = '\0'; int d = 0;
-    
-    printf(YELLOW "Type:\n\t\"i\", index and number to insert it\n\t\"d\", index and random symb to delete it\n\t\"q q\" to quit.\n" WHITE);
-    while (scanf("%c%d%d", &w, &d, &v) == 3) {        
-        if (w == 'i') {
-            ListInsert(lst, d, v);
-        }
-        else if (w == 'd') {
-            ListDelete(lst, d);
-        }
-        else if (w == 'q') {
-            break;
-        }
-        else 
-            printf("Try again.\n");
+    printf(YELLOW "Type:\n\t\"i\", index and number to insert it\n\t\"d\", index and random symb to delete it\n\t\"q q\" to quit\n\t\"p p\" to print.\n" WHITE);
+    while (scanf("%c%d%d", &w, &d, &v) == 3) {    
+        printf("In while\n");    
         CleanBuff();
+        switch (w) {
+            case 'i':
+                ListInsert(lst, d, v);
+                break;
+            case 'd':
+                ListDelete(lst, d);
+                break;
+            case 'p':
+                PRINT("in p\n");
+                ListDump(lst, files);
+                break;
+            case 'q':
+                break;
+            default: 
+                printf("Try again.\n");
+                break;
+        }
     }
     return OK;
 }

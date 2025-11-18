@@ -1,5 +1,5 @@
-#ifndef MYLIB
-#define MYLIB
+#ifndef NEEDED
+#define NEEDED
 
 #include "Colors.h"
 #include <stdio.h>
@@ -17,9 +17,7 @@
     #define PRU(x)
     #define PRTF(x)
     #define PRINT(fmt, ...)
-    #define FINISH                                
+    #define FINISH   
 #endif
-
-
 
 #endif
