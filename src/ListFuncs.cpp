@@ -24,7 +24,10 @@ int ListInit(list_t *lst, size_t capacity)
 
 int ListInsert(list_t *lst, int ind, int in)
 {
-    if (ind >= (int)lst->capacity || ind < 0 || lst->data[ind].prev == -1) {printf("You can't insert after this index!\n"); return OK;}
+    if (ind >= (int)lst->capacity || ind < 0 || lst->data[ind].prev == -1) {
+        printf("You can't insert after this index!\n"); 
+        return OK;
+    }
     lst->size++;
     if (ifree == (int)lst->capacity) {
         ListRealloc(lst);
@@ -107,19 +110,20 @@ int ListDelete(list_t *lst, int index)
 int ListProcess(list_t *lst, files_t* files)
 {
     int v = 0; char w = '\0'; int d = 0;
-    printf(YELLOW "Type:\n\t\"i\", index and number to insert it\n\t\"d\", index and random symb to delete it\n\t\"q q\" to quit\n\t\"p p\" to print.\n" WHITE);
-    while (scanf("%c%d%d", &w, &d, &v) == 3) {    
-        printf("In while\n");    
+    printf(YELLOW "Type:\n\t\"i\", index and number to insert it\n\t\"d\" and index to delete it\n\t\"q\" to quit\n\t\"p\" to print.\n" WHITE);
+    while (w = getchar()) {    
         CleanBuff();
         switch (w) {
             case 'i':
+                scanf("%d%d", &d, &v);
                 ListInsert(lst, d, v);
                 break;
             case 'd':
+                scanf("%d", &d);  
                 ListDelete(lst, d);
                 break;
             case 'p':
-                PRINT("in p\n");
+                PRINT("let's print\n");
                 ListDump(lst, files);
                 break;
             case 'q':
@@ -128,6 +132,7 @@ int ListProcess(list_t *lst, files_t* files)
                 printf("Try again.\n");
                 break;
         }
+        CleanBuff();
     }
     return OK;
 }
